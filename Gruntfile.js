@@ -111,7 +111,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
   ]);
 
-  grunt.registerTask('myConcat', ['concat', 'uglify']);
+  grunt.registerTask('myConcat', ['concat']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
