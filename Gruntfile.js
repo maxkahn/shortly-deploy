@@ -4,13 +4,13 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       basic: {
-        src: ['public/client/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
-      },
-      extras: {
-        src: ['public/lib/*.js'],
-        dest: 'dist/lib-min.js'
-      }  
+        src: ['public/client/**/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
+      }
+      // extras: {
+      //   src: ['public/lib/*.js'],
+      //   dest: 'public/dist/lib-min.js'
+      // }  
     },
     
     mochaTest: {
@@ -31,8 +31,8 @@ module.exports = function(grunt) {
     uglify: {
       my_target: {
         files: {
-          'dist/<%= pkg.name %>.js': ['dist/shortly-express.js'],
-          'dist/lib-min.js' : ['dist/lib-min.js']
+          'public/dist/<%= pkg.name %>.js': ['public/dist/shortly-express.js']
+          // 'public/dist/lib-min.js' : ['public/dist/lib-min.js']
         }
       }
     },
@@ -74,6 +74,10 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: ['git add .',
+          'git commit -m "Committed via Grunt"',
+          'git push azure master'
+          ].join('&&')
       }
     },
   });
@@ -108,20 +112,23 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', [
+  grunt.registerTask('myShell', ['shell']);
+
+  grunt.registerTask('build', ['concat', 'uglify'
   ]);
 
-  grunt.registerTask('myConcat', ['concat']);
+  grunt.registerTask('myConcat', ['concat', 'uglify']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run('myShell')
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', ['build', 'upload'
     // add your deploy tasks here
   ]);
 
