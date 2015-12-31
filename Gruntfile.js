@@ -3,8 +3,16 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      basic: {
+        src: ['public/client/*.js'],
+        dest: 'dist/<%= pkg.name %>.js'
+      },
+      extras: {
+        src: ['public/lib/*.js'],
+        dest: 'dist/lib-min.js'
+      }  
     },
-
+    
     mochaTest: {
       test: {
         options: {
@@ -21,6 +29,12 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      my_target: {
+        files: {
+          'dist/<%= pkg.name %>.js': ['dist/shortly-express.js'],
+          'dist/lib-min.js' : ['dist/lib-min.js']
+        }
+      }
     },
 
     jshint: {
@@ -38,6 +52,7 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+       files: 'public/*.css'
     },
 
     watch: {
@@ -95,6 +110,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
   ]);
+
+  grunt.registerTask('myConcat', ['concat', 'uglify']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
