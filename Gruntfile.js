@@ -39,7 +39,7 @@ module.exports = function(grunt) {
 
     jshint: {
       files: [
-        // Add filespec list here
+        src: []
       ],
       options: {
         force: 'true',
